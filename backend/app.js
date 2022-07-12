@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 const {MONGOURI} = require('./config/keys');
 const errorMiddleware = require("./middleware/error");
+const cookieParser = require("cookie-parser");
 
 
 mongoose.connect(MONGOURI)
@@ -17,6 +18,7 @@ mongoose.connection.on('error',(err)=>{
 
 
 app.use(express.json())
+app.use(cookieParser());
 
 // Route imports
 
