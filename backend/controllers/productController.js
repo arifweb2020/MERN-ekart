@@ -1,8 +1,9 @@
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorhander");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 
 // Create Product -- Admin
-exports.createProduct = async (req, res, next) => {
+exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   // let images = [];
 
   // if (typeof req.body.images === "string") {
@@ -33,10 +34,10 @@ exports.createProduct = async (req, res, next) => {
     success: true,
     product,
   });
-};
+});
 
 // get All products
-exports.getAllProducts = async (req, res) => {
+exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 
   const products = await Product.find()
 
@@ -44,12 +45,12 @@ exports.getAllProducts = async (req, res) => {
     success: true,
     products
   })
-}
+})
 
 
 // Update Product -- Admin
 
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -103,12 +104,12 @@ exports.updateProduct = async (req, res, next) => {
     success: true,
     product,
   });
-};
+});
 
 
 // Delete Product
 
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -134,11 +135,11 @@ exports.deleteProduct = async (req, res, next) => {
     success: true,
     message: "Product Delete Successfully",
   });
-};
+});
 
 
 // Get Product Details
-exports.getProductDetails =async (req, res, next) => {
+exports.getProductDetails =catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -155,4 +156,4 @@ exports.getProductDetails =async (req, res, next) => {
     success: true,
     product,
   });
-};
+});
