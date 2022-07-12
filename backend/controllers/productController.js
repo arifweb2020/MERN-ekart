@@ -1,6 +1,7 @@
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utils/apifeatures");
 
 // Create Product -- Admin
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
@@ -37,15 +38,53 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 // get All products
-exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 
-  const products = await Product.find()
+// exports.getAllProducts = catchAsyncErrors(async (req, res) => {
+//   const resultPerPage = 8;
+//   const productsCount = await Product.countDocuments();
+
+//   const x = new ApiFeatures(Product.find(), req.query)
+//     .search()
+//     .filter();
+
+//  // const products = await Product.find()
+
+//  let products = await Product.x.query
+
+//   res.status(200).json({
+//     success: true,
+//     products,
+//     productsCount,
+//     resultPerPage,
+//   })
+// })
+
+// get All products
+
+exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+  const resultPerPage = 8;
+  const productsCount = await Product.countDocuments();
+
+  const apiFeature = new ApiFeatures(Product.find(), req.query)
+    .search()
+    .filter();
+
+  let products = await apiFeature.query;
+
+  // let filteredProductsCount = products.length;
+
+  // apiFeature.pagination(resultPerPage);
+
+  //products = await apiFeature.query;
 
   res.status(200).json({
     success: true,
-    products
-  })
-})
+    products,
+    productsCount,
+    resultPerPage,
+    // filteredProductsCount,
+  });
+});
 
 
 // Update Product -- Admin
@@ -122,7 +161,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   //   })
   // }
 
-  
+
 
   // Deleting Images From Cloudinary
   // for (let i = 0; i < product.images.length; i++) {
@@ -139,7 +178,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
 
 // Get Product Details
-exports.getProductDetails =catchAsyncErrors(async (req, res, next) => {
+exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -155,5 +194,6 @@ exports.getProductDetails =catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     product,
+
   });
 });
